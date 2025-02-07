@@ -11,6 +11,10 @@ interface Item {
   url: string;
 }
 
+const handleThrowError = () => {
+  throw new Error("This is a test error.");
+};
+
 const App: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -100,7 +104,7 @@ const App: React.FC = () => {
               <CardList
                 items={items}
                 isLoading={isLoading}
-                onItemClick={handleItemClick} // Pass the onItemClick prop
+                onItemClick={handleItemClick}
               />
               {!searchTerm && (
                 <div>

@@ -1,0 +1,17 @@
+.split-view {
+  display: flex;
+}
+
+.left-section {
+  flex: 1;
+}
+
+.right-section {
+  flex: 1;
+  padding: 20px;
+}
+
+.details-section {
+  border-left: 1px solid #ccc;
+  padding-left: 20px;
+}

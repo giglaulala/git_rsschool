@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-// import "./details.css";
+import "./details.css";
 
 interface DetailsProps {
   onClose: () => void;
@@ -33,7 +33,9 @@ const Details: React.FC<DetailsProps> = ({ onClose }) => {
 
   return (
     <div className="details-section">
-      <button onClick={onClose}>Close</button>
+      <button onClick={onClose} className="btn">
+        Close
+      </button>
       {isLoading ? (
         <div>Loading...</div>
       ) : (
