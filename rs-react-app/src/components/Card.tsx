@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import "./card.css"; // Import the CSS file
+import React from "react";
+import "./card.css";
+
+interface Item {
+  name: string;
+  url: string;
+}
 
 interface CardProps {
-  name: string;
-  description: string;
+  item: Item;
+  onClick: () => void; // Define the onClick prop
 }
 
-class Card extends Component<CardProps> {
-  render() {
-    const { name, description } = this.props;
-    return (
-      <div className="card">
-        <h3>{name}</h3>
-        <p>{description}</p>
-        <a href="#">View More</a>
-      </div>
-    );
-  }
-}
+const Card: React.FC<CardProps> = ({ item, onClick }) => {
+  return (
+    <div className="card" onClick={onClick}>
+      <h3>{item.name}</h3>
+    </div>
+  );
+};
 
 export default Card;

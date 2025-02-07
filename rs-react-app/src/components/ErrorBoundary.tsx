@@ -1,11 +1,9 @@
 import React, { Component, ReactNode } from "react";
 
-// Define the shape of the ErrorBoundary component's state
 interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-// Define the shape of the ErrorBoundary component's props
 interface ErrorBoundaryProps {
   children: ReactNode;
 }

@@ -1,37 +1,34 @@
-import React, { Component } from "react";
+import React from "react";
 import Card from "./Card";
 import "./cardlist.css";
 
 interface Item {
   name: string;
-  url: string; // Matches the API response
+  url: string;
 }
 
 interface CardListProps {
   items: Item[];
   isLoading: boolean;
+  onItemClick: (item: Item) => void; // Define the onItemClick prop
 }
 
-class CardList extends Component<CardListProps> {
-  render() {
-    const { items, isLoading } = this.props;
-
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
-
-    return (
-      <div className="cardlist">
-        {items.map((item, index) => (
-          <Card
-            key={index}
-            name={item.name}
-            description={`More info: ${item.url}`}
-          />
-        ))}
-      </div>
-    );
-  }
-}
+const CardList: React.FC<CardListProps> = ({
+  items,
+  isLoading,
+  onItemClick,
+}) => {
+  return (
+    <div className="card-list">
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        items.map((item) => (
+          <Card key={item.name} item={item} onClick={() => onItemClick(item)} />
+        ))
+      )}
+    </div>
+  );
+};
 
 export default CardList;
