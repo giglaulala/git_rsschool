@@ -10,7 +10,7 @@ interface Item {
 interface CardListProps {
   items: Item[];
   isLoading: boolean;
-  onItemClick: (item: Item) => void; // Define the onItemClick prop
+  onItemClick: (item: Item) => void;
 }
 
 const CardList: React.FC<CardListProps> = ({
