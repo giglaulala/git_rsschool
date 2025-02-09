@@ -37,7 +37,7 @@ const Details: React.FC<DetailsProps> = ({ onClose }) => {
         Close
       </button>
       {isLoading ? (
-        <div>Loading...</div>
+        <div>Loading....</div>
       ) : (
         details && (
           <div>
