@@ -1,10 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import {
+  useGetPokemonListQuery,
+  useGetPokemonByNameQuery,
+} from "./services/pokemonApi"; // Import RTK hooks
 import Search from "./components/Search";
 import CardList from "./components/CardList";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Details from "./components/Details";
+import Flyout from "./components/Flyout";
 
 interface Item {
   name: string;
@@ -16,54 +20,43 @@ const handleThrowError = () => {
 };
 
 const App: React.FC = () => {
-  const [items, setItems] = useState<Item[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [offset, setOffset] = useState(0);
   const [searchTerm, setSearchTerm] = useState<string>(
     localStorage.getItem("searchTerm") || ""
   );
+  const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const fetchData = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      let results: Item[] = [];
+  // Fetch Pokémon list
+  const {
+    data: listData,
+    isLoading: isListLoading,
+    error: listError,
+  } = useGetPokemonListQuery(
+    { limit: 5, offset },
+    { skip: !!searchTerm } // Skip if searching by name
+  );
 
-      if (searchTerm) {
-        const response = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon-species/${searchTerm.toLowerCase()}`
-        );
+  // Fetch Pokémon by search term
+  const {
+    data: searchData,
+    isLoading: isSearchLoading,
+    error: searchError,
+  } = useGetPokemonByNameQuery(searchTerm.toLowerCase(), { skip: !searchTerm });
 
-        results = [
+  const isLoading = isListLoading || isSearchLoading;
+  const error = searchError || listError;
+  const items: Item[] = searchTerm
+    ? searchData
+      ? [
           {
-            name: response.data.name,
-            url: `https://pokeapi.co/api/v2/pokemon/${response.data.id}`,
+            name: searchData.name,
+            url: `https://pokeapi.co/api/v2/pokemon/${searchData.id}`,
           },
-        ];
-      } else {
-        const response = await axios.get("https://pokeapi.co/api/v2/pokemon", {
-          params: { limit: 5, offset },
-        });
-
-        results = response.data.results;
-      }
-
-      setItems(results);
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-      setItems([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [offset, searchTerm]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+        ]
+      : []
+    : listData?.results || [];
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -97,7 +90,10 @@ const App: React.FC = () => {
       <div>
         <Search onSearch={handleSearch} />
         {error ? (
-          <div>Error: {error}</div>
+          <div>
+            Error:{" "}
+            {error instanceof Error ? error.message : "An error occurred"}
+          </div>
         ) : (
           <div className="split-view">
             <div className="left-section">
@@ -143,6 +139,7 @@ const App: React.FC = () => {
         <button className="btn error" onClick={handleThrowError}>
           Throw Error
         </button>
+        <Flyout />
       </div>
     </ErrorBoundary>
   );

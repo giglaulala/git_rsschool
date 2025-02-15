@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import { useGetPokemonByNameQuery } from "../services/pokemonApi";
 import "./details.css";
 
 interface DetailsProps {
@@ -7,29 +7,16 @@ interface DetailsProps {
 }
 
 const Details: React.FC<DetailsProps> = ({ onClose }) => {
-  const [details, setDetails] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const urlParams = new URLSearchParams(window.location.search);
+  const itemName = urlParams.get("details");
 
-  useEffect(() => {
-    const fetchDetails = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const itemName = urlParams.get("details");
-      if (itemName) {
-        try {
-          const response = await axios.get(
-            `https://pokeapi.co/api/v2/pokemon/${itemName}`
-          );
-          setDetails(response.data);
-        } catch (error) {
-          console.error("Error fetching details:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchDetails();
-  }, []);
+  const {
+    data: details,
+    isLoading,
+    error,
+  } = useGetPokemonByNameQuery(itemName || "", {
+    skip: !itemName,
+  });
 
   return (
     <div className="details-section">
@@ -38,6 +25,8 @@ const Details: React.FC<DetailsProps> = ({ onClose }) => {
       </button>
       {isLoading ? (
         <div>Loading....</div>
+      ) : error ? (
+        <div>Error fetching details</div>
       ) : (
         details && (
           <div>
