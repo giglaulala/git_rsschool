@@ -14,6 +14,7 @@ interface Item {
   name: string;
   url: string;
 }
+import { useTheme } from "./context/ThemeContext";
 
 const handleThrowError = () => {
   throw new Error("This is a test error.");
