@@ -9,7 +9,7 @@ import CardList from "./components/CardList";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Details from "./components/Details";
 import Flyout from "./components/Flyout";
-
+import "./App.css";
 interface Item {
   name: string;
   url: string;
