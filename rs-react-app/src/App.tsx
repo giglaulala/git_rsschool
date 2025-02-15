@@ -57,6 +57,7 @@ const App: React.FC = () => {
         ]
       : []
     : listData?.results || [];
+  const { theme } = useTheme();
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -87,7 +88,9 @@ const App: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <div>
+      <div className={`app ${theme}`}>
+        <h1>Welcome to My App</h1>
+        <p>This app uses a {theme} theme.</p>
         <Search onSearch={handleSearch} />
         {error ? (
           <div>
